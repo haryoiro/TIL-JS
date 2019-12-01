@@ -39,13 +39,37 @@ const addWord = (req, res) => {
 
 app.get('/add/:word/:score?', addWord)
 
-const words = {
+const stacks = {
   "rainbow" : 63,
   "red" : 3,
   "gleen" : -15
 }
 
 app.get('/all', (req, res) => {res.send(words)})
+
+
+
+const searchWord = (req, res) => {
+  let word = req.params.word,
+      replay = {};
+  if(!stacks[word]){
+      replay = {
+      status: "not found",
+      word: word
+    }
+  }
+  else {
+    replay = {
+      status: "found",
+      word: word,
+      score: stacks[word]
+    }
+  }
+
+  res.send(replay)
+}
+
+app.get('/search/:word', searchWord)
 
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
