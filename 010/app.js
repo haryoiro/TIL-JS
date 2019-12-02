@@ -1,9 +1,14 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const path = require('path')
+const fs = require('fs')
 
 const app = express()
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3000;
+
+const data = fs.readFileSync('words.json')
+const words = JSON.parse(data)
+console.log(words)
 
 app.use(bodyParser.json())
 app.set('views', path.join(__dirname, 'views'))
@@ -19,31 +24,31 @@ app.get('/', (req, res) => {
 })
 
 const addWord = (req, res) => {
-  let data = req.params,
-      word = data.word,
-      score = Number(data.score),
+  let datas = req.params,
+      word = datas.word,
+      score = Number(datas.score),
       replay
   if(!score){
     replay = {
-      msg: "Didn't type your score. Please score"
+      msg: "please input score"
     }
+    res.send(replay.msg)
   }
   else {
     replay = {
-      msg: "Thank you for your word and score."
+      msg: "Thank you for your word and score.",
     }
+    words[word] = score
+    const finished = err => console.log('all set.')
+    fs.writeFile("words.json", datas, finished)
+
+    res.send(replay.msg)
   }
-  words[word] = score
-  res.send(replay.msg)
 }
 
 app.get('/add/:word/:score?', addWord)
 
-const stacks = {
-  "rainbow" : 63,
-  "red" : 3,
-  "gleen" : -15
-}
+
 
 app.get('/all', (req, res) => {res.send(words)})
 
