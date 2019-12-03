@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const path = require('path')
 const fs = require('fs')
+const pug = require('pug')
 
 const app = express()
 const port = process.env.PORT || 3000;
@@ -28,7 +29,6 @@ app.get('/', (req, res) => {
 
 let wordJSON = fs.readFileSync('words.json')
 let wordStack = JSON.parse(wordJSON)
-console.log(wordStack)
 
 const addWord = (req, res) => {
   let words = req.params.word,
@@ -40,12 +40,17 @@ const addWord = (req, res) => {
         msg:"Thank you for your score and word"
       }
     wordStack[words] = score
-    wordStack = JSON.stringify(wordStack)
-    res.send(replay.msg)
-    console.log(wordStack)
-    fs.writeFile('words.json', wordStack, writedWords)
+    let wordStacker = JSON.stringify(wordStack, null, 2)
+    fs.writeFile('words.json', wordStacker, writedWords)
     function writedWords(err){
         console.log('all set.')
+        replay = {
+          word: words,
+          score: score,
+          status: "SUCCESS"
+        }
+    console.log(wordStack)
+    res.send(replay)
     }
   }
 
@@ -54,7 +59,7 @@ const addWord = (req, res) => {
       msg: "Please type your word and score"
     }
   res.send(replay.msg)
-  wordStack = JSON.stringify(wordStack)
+  wordStack = JSON.stringify(wordStack, null, 2)
   console.log(wordStack)
   }
 }
