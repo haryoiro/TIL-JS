@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>CSS</title>
+  <style>
+    .wrapper {
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+    }
+    .wrapper > div:nth-child(odd) {
+      background: #ddd;
+    }
+    .wrapper > div{
+      background: #eee;
+      padding: 1em;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div>
+      Lorem ipsum dolor sit.
+    </div>
+    <div>
+        Lorem ipsum dolor sit.
+    </div>
+    <div>
+      Lorem ipsum dolor sit.
+    </div>    
+    <div>
+      Lorem ipsum dolor sit.
+    </div>    
+    <div>
+        Lorem ipsum dolor sit.
+    </div>
+    <div>
+      Lorem ipsum dolor sit.
+    </div>
+    <div>
+        Lorem ipsum dolor sit.
+    </div>
+    <div>
+      Lorem ipsum dolor sit.
+    </div>    
+    <div>
+      Lorem ipsum dolor sit.
+    </div>    
+    <div>
+        Lorem ipsum dolor sit.
+    </div>
+  </div>
+</body>
+</html>
