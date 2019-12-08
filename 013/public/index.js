@@ -2,7 +2,8 @@ window.addEventListener('load', () => {
   const canvas = document.querySelector('#canvas')
   const ctx = canvas.getContext('2d')
   const socket = io.connect('http://localhost:3000')
-  
+
+
   socket.on('mousePoint', data => {
   if(dragging) {
     ctx.lineTo(data.x, data.y)
@@ -61,7 +62,23 @@ window.addEventListener('load', () => {
     dragging = true
     socket.emit('mouseDown')
   }
+  
 
+  const submitBtn = document.getElementById('submitBtn')
+  const chatField = document.getElementById('chatField')
+
+  socket.on('userMsg', msg => {
+    chatField.insertAdjacentHTML('afterend', `<p style="background-color: blue;margin: 0px">${msg.msg}</p><br>`)
+  })
+
+  const chatEmit = () => {
+    chatField.insertAdjacentHTML('afterend', `<p style="background-color: white;margin: 0px">${document.chatForm.chats.value}</p><br>`)
+    socket.emit('msgOn', {msg: document.chatForm.chats.value})
+    document.chatForm.chats.value = ''
+    document.chatForm.chats.focus()
+  }
+  
+  submitBtn.addEventListener('click', chatEmit)
   canvas.addEventListener('mousedown', engage)
   canvas.addEventListener('mousemove', drawPoint)
   canvas.addEventListener('mouseup', disengage)

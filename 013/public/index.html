@@ -7,6 +7,12 @@
 <title>canvas</title>
 </head>
 <body>
+  <form name="chatForm">
+    <input type="text" name="chats" id="chats" autocomplete="off" >
+    <button type="button" id="submitBtn">submit</button>
+  </form>
+  <p id="chatField"></p>
+
   <canvas id="canvas"></canvas>
   <script src="./index.js"></script>
   <script src="/socket.io/socket.io.js"></script>

@@ -10,6 +10,7 @@ const io = socket(server)
 
 const connection = socket => {
   console.log(`new connection: ${socket.id}`)
+
   socket.on('mousePoint', data => {
     socket.broadcast.emit('mousePoint', data)
   })
@@ -18,6 +19,11 @@ const connection = socket => {
   })
   socket.on('mouseUp', data => {
     socket.broadcast.emit('mouseUp', data)
+  })
+
+
+  socket.on('msgOn', msg => {
+    socket.broadcast.emit('userMsg', msg)
   })
 }
 
