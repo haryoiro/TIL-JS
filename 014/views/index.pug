@@ -6,5 +6,21 @@ html(lang="ja")
     meta(http-equiv="X-UA-Compatible", content="ie=edge")
     title みんなでおえかきちゃっと
     style
-      include ../public/stylesheets/style.css
+      include ../public/style.css
   body
+    .container
+      .box1
+        form#chatForm.chatForm(name="chatForm")
+          input#chats.chats( type="text" autocomplete="off" )
+          button.submitBtn(type="button") submit
+      .box2
+        p.chatField
+      .box3 box3 Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+      .box4 box4 Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+      .box5 box5 Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+      .box6 box6 Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+      .box7 box7 Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+      .box8 box8 Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+    script(src="/socket.io/socket.io.js")
+    script
+      include ../public/index.js

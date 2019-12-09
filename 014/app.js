@@ -6,19 +6,18 @@ const path = require('path')
 const bodyParser = require('body-parser')
 
 app.use('/public', express.static(__dirname + '/public'))
-app.use(bodyParser.urlencoded({extended: false}))
 
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'pug')
 
 
-const serer = app.listen(port, (req, res) => {
-  res.writeHead(200, {'Content-Type': 'text/plain'})
-  console.log(`Server running at http://127.0.0.1:${port}/`)
-})
+const serer = app.listen(port)
+console.log(`Server running at http://127.0.0.1:${port}/`)
+
+const io = socket(serer)
 
 app.get('/', (req, res, next) => {
-  return res.json('Hello World!')
+  res.render('index')
 })
 
 app.use((req, res, next) => {
@@ -35,7 +34,14 @@ app.use((err, req, res, next) => {
   })
 })
 
-const io = socket(serer)
+const connection = socket => {
+  console.log(socket.id)
+  socket.on('onMsg', data => {
+    console.log(data.msg)
+  })
+}
+  
+io.sockets.on('connection', connection)
 
 
 
