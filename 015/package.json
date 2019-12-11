@@ -1,6 +1,6 @@
 {
   "name": "015",
   "version": "1.0.0",
-  "main": "a.js",
+  "main": "app.js",
   "license": "MIT"
 }
