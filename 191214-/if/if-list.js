@@ -2,7 +2,7 @@
 let i = 100
 let table = []
 const forIfNumStrict = () => {
-  let a1 = performance.now()
+  console.time('forIfNumStrict');let a1 = performance.now()
 for(let n = 0;n < i;n=(n+1)|0){
     if(n === 0) {}
     if(n === 1) {}
@@ -106,13 +106,13 @@ for(let n = 0;n < i;n=(n+1)|0){
     if(n === 99){}
     if(n === 100){}
 }
-let a2 = performance.now()
+console.timeEnd('forIfNumStrict');let a2 = performance.now()
 let b1 = a2 - a1
 
 table.forIfNumStrict = b1.toFixed(4) + 'ms'
 }
 const forIfStrict = () => {
-  let a1 = performance.now()
+  console.time('forIfStrict');let a1 = performance.now()
 for(let n = 0;n < i;n=(n+1)){
     if(n === 0) {}
     if(n === 1) {}
@@ -216,13 +216,13 @@ for(let n = 0;n < i;n=(n+1)){
     if(n === 99){}
     if(n === 100){}
 }
-let a2 = performance.now()
+console.timeEnd('forIfStrict');let a2 = performance.now()
 let b1 = a2 - a1
 
 table.forIfStrict = b1.toFixed(4) + 'ms'
 }
 const forIfNumEquality = () => {
-  let a1 = performance.now()
+  console.time('forIfNumEquality');let a1 = performance.now()
 for(let n = 0;n < i;n=(n+1)){
     if(n == 0) {}
     if(n == 1) {}
@@ -326,13 +326,13 @@ for(let n = 0;n < i;n=(n+1)){
     if(n == 99){}
     if(n == 100){}
 }
-let a2 = performance.now()
+console.timeEnd('forIfNumEquality');let a2 = performance.now()
 let b1 = a2 - a1
 
 table.forIfNumEquality = b1.toFixed(4) + 'ms'
 }
 const forIfEquality = () => {
-  let a1 = performance.now()
+  console.time('forIfEquality');let a1 = performance.now()
 for(let n = 0;n < i;n=(n+1)){
     if(n == 0) {}
     if(n == 1) {}
@@ -436,13 +436,13 @@ for(let n = 0;n < i;n=(n+1)){
     if(n == 99){}
     if(n == 100){}
 }
-let a2 = performance.now()
+console.timeEnd('forIfEquality');let a2 = performance.now()
 let b1 = a2 - a1
 
 table.forIfEquality = b1.toFixed(4) + 'ms'
 }
 const forElseIfEquality = () => {
-  let a1 = performance.now()
+  console.time('forElseIfEquality');let a1 = performance.now()
 for(let n = 0;n < i;n=(n+1)){
   if(n == 0){}
   else if(n == 1) {}
@@ -546,13 +546,13 @@ for(let n = 0;n < i;n=(n+1)){
   else if(n == 99){}
   else{};
 }
-let a2 = performance.now()
+console.timeEnd('forElseIfEquality');let a2 = performance.now()
 let b1 = a2 - a1
 
 table.forElseIfEquality = b1.toFixed(4) + 'ms'
 }
 const forElseIfStrict = () => {
-  let a1 = performance.now()
+  console.time('forElseIfStrict');let a1 = performance.now()
 for(let n = 0;n < i;n=(n+1)){
   if(n === 0){}
   else if(n === 1){}
@@ -656,13 +656,13 @@ for(let n = 0;n < i;n=(n+1)){
   else if(n === 99){}
   else{}
 }
-let a2 = performance.now()
+console.timeEnd('forElseIfStrict');let a2 = performance.now()
 let b1 = a2 - a1
 
 table.forElseIfStrict = b1.toFixed(4) + 'ms'
 }
 const forElseIfNumEquality = () => {
-  let a1 = performance.now()
+  console.time('forElseIfNumEquality');let a1 = performance.now()
 for(let n = 0;n < i;n=(n+1)|0){
   if(n == 0){}
   else if(n == 1) {}
@@ -766,13 +766,13 @@ for(let n = 0;n < i;n=(n+1)|0){
   else if(n == 99){}
   else{};
 }
-let a2 = performance.now()
+console.timeEnd('forElseIfNumEquality');let a2 = performance.now()
 let b1 = a2 - a1
 
 table.forElseIfNumEquality = b1.toFixed(4) + 'ms'
 }
 const forElseIfNumStrict = () => {
-  let a1 = performance.now()
+  console.time('forElseIfNumStrict');let a1 = performance.now()
 for(let n = 0;n < i;n=(n+1)|0){
   if(n === 0){}
   else if(n === 1){}
@@ -876,7 +876,7 @@ for(let n = 0;n < i;n=(n+1)|0){
   else if(n === 99){}
   else{}
 }
-let a2 = performance.now()
+console.timeEnd('forElseIfNumStrict');let a2 = performance.now()
 let b1 = a2 - a1
 
 table.forElseIfNumStrict = b1.toFixed(4) + 'ms'
