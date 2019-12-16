@@ -75,7 +75,7 @@ const done = task => {
 * @return {array}
 */
 const doneList = () => {
-  return Array.from(tasks)
+	return Array.from(tasks)
     .filter(isDone)
     .map(t => t[0]);
 }
@@ -92,8 +92,8 @@ const del = task => {
 
 module.exports = {
 	todo,
-  list,
-  done,
+	list,
+	done,
 	doneList,
 	del
 };
