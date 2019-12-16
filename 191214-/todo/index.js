@@ -1,5 +1,23 @@
 "use_strict";
-const tasks = new Map();
+let tasks = new Map();
+const fs = require('fs')
+const fileName = './tasks.json'
+
+try {
+	const data  =fs.readFileSync(fileName, 'utf8')
+	tasks = new Map(JSON.parse(data))
+} catch (ignore) {
+	console.log(fileName + 'から復元できませんでした')
+	console.log('error: ' + ignore)
+}
+
+/**
+ * 
+ * タスクにファイルを保存する
+ */
+const saveTasks = () => {
+	fs.writeFileSync(fileName, JSON.stringify(Array.from(tasks)), 'utf8')
+}
 
 /**
  * TODOを追加する
@@ -7,6 +25,7 @@ const tasks = new Map();
  */
 const todo = task => {
 	tasks.set(task, false);
+	saveTasks()
 };
 
 /**
@@ -42,9 +61,10 @@ const list = () => {
 * @param {string} task
 */
 const done = task => {
-  if (tasks.has(task)) {
-    tasks.set(task, true);
-  }
+	if (tasks.has(task)) {
+		tasks.set(task, true);
+		saveTasks()
+	}
 }
 
 /**
@@ -52,7 +72,7 @@ const done = task => {
 * @return {array}
 */
 const doneList = () => {
-  return Array.from(tasks)
+	return Array.from(tasks)
     .filter(isDone)
     .map(t => t[0]);
 }
@@ -62,14 +82,15 @@ const doneList = () => {
 * @param {string} task
 */
 const del = task => {
-  tasks.delete(task);
+	tasks.delete(task);
+	saveTasks()
 }
 
 
 module.exports = {
 	todo,
-  list,
-  done,
+	list,
+	done,
 	doneList,
 	del
 };
