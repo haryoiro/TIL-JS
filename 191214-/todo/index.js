@@ -1,12 +1,34 @@
 "use_strict";
-const tasks = new Map();
+let tasks = new Map();
+const fs = require('fs')
+const fileName = './tasks.json'
+
+try {
+  const data = fs.readFileSync(fileName, 'utf8')
+  tasks = new Map (JSON.parse(data))
+} catch (ignore){
+  console.log(fileName + 'から復元できませんでした')
+}
+
+
+/**
+ * タスクにファイルを保存する 
+ * taskという連想配列を <= map化
+ * Array.fromで配列に変換した後、
+ * 更に、JSON.stringifyでJSONの文字列に変換し、
+ * writeFileSyncで同期的にファイルに書き出しています。
+ */
+const saveTasks = () => {
+  fs.writeFileSync(fileName, JSON.stringify(Array.from(tasks)), 'utf8')
+}
 
 /**
  * TODOを追加する
  * @param	{string} task
  */
 const todo = task => {
-	tasks.set(task, false);
+  tasks.set(task, false);
+  saveTasks()
 };
 
 /**
@@ -44,6 +66,7 @@ const list = () => {
 const done = task => {
   if (tasks.has(task)) {
     tasks.set(task, true);
+    saveTasks()
   }
 }
 
@@ -63,6 +86,7 @@ const doneList = () => {
 */
 const del = task => {
   tasks.delete(task);
+  saveTasks()
 }
 
 
