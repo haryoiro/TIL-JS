@@ -1,0 +1,1 @@
+console.log('this log is output by sub.js')
