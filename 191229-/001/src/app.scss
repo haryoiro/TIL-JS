@@ -1,0 +1,10 @@
+h1 {
+  font-size: 2em;
+  transition: all 0.3s;
+  color: red;
+
+  &:hover{
+    transform: translateX(50px);
+    color: blue;
+  }
+}
