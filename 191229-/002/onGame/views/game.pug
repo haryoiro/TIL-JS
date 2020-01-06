@@ -3,5 +3,9 @@ extends layout
 block content
   canvas#rCanvas
   canvas#sCanvas
+
   h3 #{displayName}
+  a(href='/logout') Logout  
+  a(href='/login') Login
+  
   script#main(src="/javascripts/index/bundle.js", data-displayName=`${displayName}`, data-thumbUrl=`${thumbUrl}`, data-ipAddress=`${ipAddress}`)

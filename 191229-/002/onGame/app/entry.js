@@ -1,1 +1,1 @@
-console.log('initialized webpack')
+import './gameMain.js'
