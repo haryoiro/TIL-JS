@@ -3,11 +3,11 @@ body {
   text-align: center;
 }
 
-canvas#rader {
+canvas#rCanvas {
   border-radius: 50px;
   background-color: rgba(00,20,50,1.0);
 }
-canvas#score {
+canvas#sCanvas {
   border-radius: 20px;
   background-color: rgba(250,250,250,1.0);
 }
