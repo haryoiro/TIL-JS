@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  h1= title
+  if user
+    h4 以下のアカウントでゲームに参加できます
+    h2(style='height:30px;') #{user.username}
+      img(src=`${user.photos[0].value}` style='width:30px;height:30px;margin:0px 10px 0px 10px ;')
+    h2
+      a(href='/game') #{user.username} でゲームに参加
+    h3
+      a(href='/logout') Logout
+  else
+    a(href='/login') Login
