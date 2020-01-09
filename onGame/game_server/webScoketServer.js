@@ -12,13 +12,15 @@ function createWebSocketServer(io, game) {
     const startObj = game.newConnection(socket.id, displayName, thumbUrl)
     socket.emit('start data', startObj)
 
+    socket.on('change direction', (direction) => {
+      game.updatePlayerDirection(socket.id, direction)
+    })
 
     socket.on('disconnect', () => {
       game.disconnect(socket.id)
     })
   })
-
-  const socketTicket = setInterval(() => {
+  const socketTicker = setInterval(() => {
     rootIo.volatile.emit('map data', game.getMapData()) // 全員に送信 
   }, 
   66)

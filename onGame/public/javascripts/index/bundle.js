@@ -81,7 +81,7 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./entry.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -4620,7 +4620,7 @@ if (typeof WebSocket !== 'undefined') {
 
 if (typeof window === 'undefined') {
   try {
-    NodeWebSocket = __webpack_require__(/*! ws */ 0);
+    NodeWebSocket = __webpack_require__(/*! ws */ 1);
   } catch (e) { }
 }
 
@@ -10478,6 +10478,12 @@ var gameObj = {
   itemRadius: 4,
   airRadius: 5,
   deg: 0,
+  rotationDegreeByDirection: {
+    'left': 0,
+    'up': 270,
+    'down': 90,
+    'right': 0
+  },
   myDisplayName: mainDoc.getAttribute('data-displayname'),
   myThumbUrl: mainDoc.getAttribute('data-thumburl'),
   fieldWidth: null,
@@ -10513,13 +10519,13 @@ function ticker() {
   // サーバからデータを受け取っていない場合はマップを描画しない
   if (!gameObj.myPlayerObj || !gameObj.playersMap) return;
   gameObj.rCanvas.clearRect(0, 0, gameObj.radarCanvasWidth, gameObj.radarCanvasHeight); // 全体をクリア
-  drawradar(gameObj.rCanvas);
+  drawRadar(gameObj.rCanvas);
   drawMap(gameObj);
-  drawPalyer(gameObj.rCanvas);
+  drawPalyer(gameObj.rCanvas, gameObj.myPlayerObj);
 }
 setInterval(ticker, 33); // 33ms毎秒マップの描画範囲を更新
 
-function drawradar(rCanvas) {
+function drawRadar(rCanvas) {
   var x = gameObj.radarCanvasWidth / 2;
   var y = gameObj.radarCanvasHeight / 2;
   var r = gameObj.radarCanvasWidth * 1.5 / 2;
@@ -10542,9 +10548,15 @@ function drawradar(rCanvas) {
   gameObj.deg = (gameObj.deg + 5) % 360;
 }
 
-function drawPalyer(rCanvas) {
+function drawPalyer(rCanvas, myPlayerObj) {
+  var rotationDegree = gameObj.rotationDegreeByDirection[myPlayerObj.direction];
+
   rCanvas.save();
   rCanvas.translate(gameObj.radarCanvasWidth / 2, gameObj.radarCanvasHeight / 2);
+  rCanvas.rotate(getRadian(rotationDegree));
+  if (myPlayerObj.direction === 'left') {
+    rCanvas.scale(-1, 1);
+  }
 
   rCanvas.drawImage(gameObj.pImage, -(gameObj.pImage.width / 2), -(gameObj.pImage.height / 2));
   rCanvas.restore();
@@ -10556,6 +10568,7 @@ function drawMap(gameObj) {
   var _iteratorError = undefined;
 
   try {
+
     for (var _iterator = gameObj.itemsMap[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
       var _ref = _step.value;
 
@@ -10571,7 +10584,8 @@ function drawMap(gameObj) {
         var degreeDiff = calcDegreeDiffFromRadar(gameObj.deg, distanceObj.degree);
         var rgbOpacity = calcOpacity(degreeDiff);
 
-        gameObj.rCanvas.fillStyle = 'rgba(255, 165, 0, ' + rgbOpacity + ')';
+        // gameObj.rCanvas.fillStyle = `rgba(255, 165, 0, ${rgbOpacity})`
+        gameObj.rCanvas.fillStyle = 'rgba(255, 165, 0, 0.5)';
         gameObj.rCanvas.beginPath();
         gameObj.rCanvas.arc(distanceObj.drawX, distanceObj.drawY, gameObj.itemRadius, 0, Math.PI * 2, true);
         gameObj.rCanvas.fill();
@@ -10612,8 +10626,8 @@ function drawMap(gameObj) {
 
         var _degreeDiff = calcDegreeDiffFromRadar(gameObj.deg, distanceObj.degree);
         var _rgbOpacity = calcOpacity(_degreeDiff);
-        gameObj.rCanvas.fillStyle = 'rgba(0, 220, 255, ' + _rgbOpacity + ')';
-        console.log(gameObj.rCanvas.fillStyle);
+        // gameObj.rCanvas.fillStyle = `rgba(0, 220, 255, ${rgbOpacity})`
+        gameObj.rCanvas.fillStyle = 'rgba(0, 220, 255, 0.5)';
         gameObj.rCanvas.beginPath();
         gameObj.rCanvas.arc(distanceObj.drawX, distanceObj.drawY, gameObj.airRadius, 0, Math.PI * 2, true);
         gameObj.rCanvas.fill();
@@ -10634,72 +10648,11 @@ function drawMap(gameObj) {
     }
   }
 }
-// PlayerとObjectの座標の距離を計算
-function calculationBetweenTwoPoints(pX, pY, oX, oY, gameWidth, gameHeight, radarCanvasWidth, radarCanvasHeight) {
-  var distanceX = 99999999,
-      distanceY = 99999999,
-      drawX = null,
-      drawY = null;
-
-  if (pX <= oX) {
-    // 右から
-    distanceX = oX - pX;
-    drawX = radarCanvasWidth / 2 + distanceX;
-    // 左から
-    var tmpDistance = pX + gameWidth - oX;
-    if (distanceX > tmpDistance) {
-      distanceX = tmpDistance;
-      drawX = radarCanvasWidth / 2 - distanceX;
-    }
-  } else {
-    // 右から
-    distanceX = pX - oX;
-    drawX = radarCanvasWidth / 2 + distanceX;
-    // 左から
-    var _tmpDistance = oX + gameWidth - pX;
-    if (distanceX > _tmpDistance) {
-      distanceX = _tmpDistance;
-      drawX = radarCanvasWidth / 2 - distanceX;
-    }
-  }
-
-  if (pY <= oY) {
-    // 下から
-    distanceY = oY - pY;
-    drawY = radarCanvasHeight / 2 + distanceY;
-    // 上から
-    var _tmpDistance2 = pY + gameHeight - oY;
-    if (distanceY > _tmpDistance2) {
-      distanceY = _tmpDistance2;
-      drawY = radarCanvasHeight / 2 - distanceY;
-    }
-  } else {
-    // 上から
-    distanceY = pY - oY;
-    drawY = radarCanvasHeight / 2 + distanceY;
-    // 下から
-    var _tmpDistance3 = oY + gameHeight - pY;
-    if (distanceY > _tmpDistance3) {
-      distanceY = _tmpDistance3;
-      drawY = radarCanvasHeight / 2 + distanceY;
-    }
-  }
-
-  var degree = calcTowPointsDegree(drawX, drawY, radarCanvasWidth / 2, radarCanvasHeight / 2);
-
-  return {
-    distanceX: distanceX,
-    distanceY: distanceY,
-    drawX: drawX,
-    drawY: drawY,
-    degree: degree
-  };
-}
 
 // 二座標間の角度を求める
 function calcTowPointsDegree(x1, y1, x2, y2) {
   var radian = Math.atan2(y2 - y1, x2 - x1);
-  var degree = radian * 180 / Math.Pi + 180;
+  var degree = radian * 180 / Math.PI + 180;
   return degree;
 }
 
@@ -10749,7 +10702,7 @@ socket.on('map data', function (compressed) {
       player.displayName = compressedPlayerData[3];
       player.score = compressedPlayerData[4];
       player.isAlive = compressedPlayerData[5];
-      player.ydirection = compressedPlayerData[6];
+      player.direction = compressedPlayerData[6];
 
       gameObj.playersMap.set(player.playerId, player);
 
@@ -10792,11 +10745,157 @@ function getRadian(angle) {
   return angle * Math.PI / 180;
 }
 
+window.addEventListener('keydown', gameKeyDown);
+
+function gameKeyDown(e) {
+  if (!gameObj.myPlayerObj || gameObj.myPlayerObj.isAlive === false) return;
+
+  debugText(gameObj.sCanvas, e.key, 20, 20, 20);
+
+  switch (e.key) {
+    case 'ArrowLeft':
+      if (gameObj.myPlayerObj.direction === 'left') break; // 変わってない
+      gameObj.myPlayerObj.direction = 'left';
+      drawPalyer(gameObj.rCanvas, gameObj.myPlayerObj);
+      sendChangeDirection(socket, 'left');
+
+      break;
+    case 'ArrowUp':
+      if (gameObj.myPlayerObj.direction === 'up') break; // 変わってない
+      gameObj.myPlayerObj.direction = 'up';
+      drawPalyer(gameObj.rCanvas, gameObj.myPlayerObj);
+      sendChangeDirection(socket, 'up');
+      break;
+    case 'ArrowDown':
+      if (gameObj.myPlayerObj.direction === 'down') break; // 変わってない
+      gameObj.myPlayerObj.direction = 'down';
+      drawPalyer(gameObj.rCanvas, gameObj.myPlayerObj);
+      sendChangeDirection(socket, 'down');
+
+      break;
+    case 'ArrowRight':
+      if (gameObj.myPlayerObj.direction === 'right') break; // 変わってない
+      gameObj.myPlayerObj.direction = 'right';
+      drawPalyer(gameObj.rCanvas, gameObj.myPlayerObj);
+      sendChangeDirection(socket, 'right');
+      break;
+  }
+}
+
+function sendChangeDirection(socket, direction) {
+  socket.emit('change direction', direction);
+  console.log(direction);
+}
+
+// PlayerとObjectの座標の距離を計算
+function calculationBetweenTwoPoints(pX, pY, oX, oY, gameWidth, gameHeight, radarCanvasWidth, radarCanvasHeight) {
+  var distanceX = 99999999,
+      distanceY = 99999999,
+      drawX = null,
+      drawY = null;
+
+  if (pX <= oX) {
+    // 右から
+    distanceX = oX - pX;
+    drawX = radarCanvasWidth / 2 + distanceX;
+    // 左から
+    var tmpDistance = pX + gameWidth - oX;
+    if (distanceX > tmpDistance) {
+      distanceX = tmpDistance;
+      drawX = radarCanvasWidth / 2 - distanceX;
+    }
+  } else {
+    // 右から
+    distanceX = pX - oX;
+    drawX = radarCanvasWidth / 2 - distanceX;
+    // 左から
+    var _tmpDistance = oX + gameWidth - pX;
+    if (distanceX > _tmpDistance) {
+      distanceX = _tmpDistance;
+      drawX = radarCanvasWidth / 2 + distanceX;
+    }
+  }
+
+  if (pY <= oY) {
+    // 下から
+    distanceY = oY - pY;
+    drawY = radarCanvasHeight / 2 + distanceY;
+    // 上から
+    var _tmpDistance2 = pY + gameHeight - oY;
+    if (distanceY > _tmpDistance2) {
+      distanceY = _tmpDistance2;
+      drawY = radarCanvasHeight / 2 - distanceY;
+    }
+  } else {
+    // 上から
+    distanceY = pY - oY;
+    drawY = radarCanvasHeight / 2 - distanceY;
+    // 下から
+    var _tmpDistance3 = oY + gameHeight - pY;
+    if (distanceY > _tmpDistance3) {
+      distanceY = _tmpDistance3;
+      drawY = radarCanvasHeight / 2 + distanceY;
+    }
+  }
+
+  var degree = calcTowPointsDegree(drawX, drawY, radarCanvasWidth / 2, radarCanvasHeight / 2);
+
+  return {
+    distanceX: distanceX,
+    distanceY: distanceY,
+    drawX: drawX,
+    drawY: drawY,
+    degree: degree
+  };
+}
+
+var textObj = {
+  time: 0,
+  key: 'none'
+};
+
+function timer() {
+  setInterval(function () {
+    textObj.time += 1;
+    debugText(gameObj.rCanvas, textObj.time, 20, 20, 20);
+  }, 1000);
+}
+window.addEventListener('load', timer);
+
+function debugText(canvas, text, size, x, y) {
+  canvas.clearRect(0, 0, 1000, 1000);
+  canvas.fillStyle = 'black';
+  canvas.font = 'bold ' + size + 'px "Arial"';
+  canvas.textAlign = 'left';
+  canvas.textBaseline = 'middle';
+  canvas.fillText('' + text, x, y);
+}
+
 init();
+
+module.exports = {
+  getRadian: getRadian,
+  calcOpacity: calcOpacity,
+  calcDegreeDiffFromRadar: calcDegreeDiffFromRadar,
+  calcTowPointsDegree: calcTowPointsDegree,
+  calculationBetweenTwoPoints: calculationBetweenTwoPoints
+};
 
 /***/ }),
 
 /***/ 0:
+/*!************************!*\
+  !*** multi ./entry.js ***!
+  \************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(/*! ./entry.js */"./entry.js");
+
+
+/***/ }),
+
+/***/ 1:
 /*!********************!*\
   !*** ws (ignored) ***!
   \********************/

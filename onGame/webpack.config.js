@@ -5,7 +5,7 @@ module.exports = {
   devtool: 'none',
   context: __dirname + '/app',
   entry: {
-    'index/': './entry.js'
+    'index/': ['./entry.js']
   }
 ,
   output: {

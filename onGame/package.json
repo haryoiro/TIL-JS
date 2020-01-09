@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "webpack": "node_modules/.bin/webpack",
-    "let": "PORT=8000 nodejs ./bin/www"
+    "let": "PORT=8000 nodejs ./bin/www",
+    "b": "yarn webpack && yarn let"
   },
   "dependencies": {
     "body-parser": "~1.0.0",
@@ -24,9 +25,11 @@
   "main": "index.js",
   "license": "MIT",
   "devDependencies": {
+    "assert": "^2.0.0",
     "babel-core": "^6.26.3",
     "babel-loader": "7",
     "babel-preset-env": "^1.7.0",
+    "mocha": "^7.0.0",
     "webpack": "^4.41.5",
     "webpack-cli": "^3.3.10"
   }
