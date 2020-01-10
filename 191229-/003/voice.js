@@ -1,10 +1,14 @@
 const speech = new webkitSpeechRecognition()
 speech.lang = 'ja-JP'
 
-const btn = document.getElementById('speechBtn')
+const startBtn = document.getElementById('startBtn')
+const endBtn = document.getElementById('endBtn')
 const content = document.getElementById('content')
 
-btn.addEventListener('click', () => {speech.start()})
+let now = false
+
+startBtn.addEventListener('click', () => {speech.start(); now = true})
+endBtn.addEventListener('click', () => {speech.stop(); now = false})
 speech.addEventListener('result', (e) => {console.log(e)})
 
 speech.onresult = e => {
@@ -17,4 +21,4 @@ speech.onresult = e => {
 	}
 }
 
-speech.onend = () => speech.start()
+speech.onend = () => {if(now) speech.start()}
