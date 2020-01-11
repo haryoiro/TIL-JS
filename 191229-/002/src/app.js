@@ -1,30 +1,59 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import styles from './css/app.css'
+import Todo from "./todo";
 
-export default class App extends React.Component {
+class App extends React.Component {
   constructor() {
     super()
     this.state = {
-      count: 0
+      input: "",
+      todos: [], 
+      time: new Date(), 
+      intervalId: ""
     }
-    this.onClickButton = this.onClickButton.bind(this)
+    this.tick = this.tick.bind(this)
+    this.addToDo = this.addToDo.bind(this)
+    this.removeToDo = this.removeToDo.bind(this)
   }
-  onClickButton() {
-    let { count } = this.state
-    this.setState({count: count + 1})
+
+  componentDidMount(){
+    let id = setInterval(this.tick, 1000)
+    this.setState({intercalId: id})
+  }
+  componentWillUnmount() {
+    clearInterval(this.state.intercalId)
+  }
+  addToDo() {
+    let { todos, input } = this.state
+    todos = todos.concat(input)
+    this.setState({todos: todos, input: ""})
+  }
+  removeToDo(i) {
+    let { todos } = this.state
+    todos = todos.slice(0, i).concat(todos.slice(i + 1))
+    this.setState({todos:todos, input:""})
+  }
+  tick(){
+    let { time } = this.state
+    time.setSecond(time.getSeconds() + 1)
+    this.setState({time: time})
   }
   render() {
     return(
-      <div id = "main">
-        <h1>{`クリックした回数 ${this.state.count}`}</h1>
-        <button onClick={this.onClickButton}>Button</button>
+      <div>
+        <h1>New Task</h1>
+        <input type="text" onChange={e => this.setState({input: e.target.value})} value={this.state.input}/>
+        <button onClick={this.addToDo}>ADD</button>
+        <h2>Now</h2>
+        <span>{this.state.time.toLocaleTimeString()}</span>
+        <h2>ToDo:</h2>
+        <Todo todos={this.state.todos} removeToDo={this.removeToDo} />
       </div>
     )
   }
 }
 
 ReactDOM.render(
-  <App name={"HARYO"}/>,
+  <App />,
   document.getElementById('app')
 )
