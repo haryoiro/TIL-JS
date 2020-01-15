@@ -1,0 +1,128 @@
+#container {
+	width: 600px;
+	height: 600px;
+	float: left;
+}
+.right {
+	float: left;
+}
+.center {
+	float: left;
+}
+.left {
+	float: left;
+}
+.box1 {
+	width: 200px;
+	height: 500px;
+	background-color: red;
+}
+.box2 {
+	width: 200px;
+	height: 100px;
+	background-color: yellow;
+}
+.box3 {
+	width: 200px;
+	height: 200px;
+	background-color: blue;
+}
+.box4 {
+	width: 200px;
+	height: 400px;
+	background-color: green;
+}
+.box5 {
+	width: 200px;
+	height: 300px;
+	background-color: black;
+}
+.box6 {
+	width: 200px;
+	height: 300px;
+	background-color: pink;
+}
+
+/* #container2
+.top
+.second
+	.1
+	.2
+	.3
+	.4
+	.5
+	.6
+.third
+	.box
+	.three
+		.1
+		.2
+		.3
+.footer */
+#container2 {
+	width: 600px;
+	height: 900px;
+	float: left;
+}
+.top {
+	width: 600px;
+	height: 100px;
+	background-color: blue;
+}
+.second {
+	width: 600px;
+	height: 100px;
+	float: left;
+}
+.sfi{
+	width: 100px;
+	height: 100px;
+	background-color: gray;
+	float: left;
+}
+.sse{
+	width: 100px;
+	height: 100px;
+	background-color: pink;
+	float: left;
+}
+.third {
+	width: 600px;
+	height: 600px;
+	float: left;
+}
+.box{
+	width: 400px;
+	height: 600px;
+	float: left;
+	background-color: skyblue;
+}
+.third.three {
+	width: 200px;
+	height: 600px;
+	float: left;
+}
+.fi {
+	width: 200px;
+	height: 200px;
+	float: left;
+	background-color: yellow;
+}
+.se {
+	width: 200px;
+	height: 200px;
+	float: left;
+	background-color: orange;
+}
+.th {
+	width: 200px;
+	height: 200px;
+	float: left;
+	background-color: red;
+}
+.footer {
+	width: 600px;
+	height: 100px;
+	float: left;
+	background-color: chartreuse;
+}
