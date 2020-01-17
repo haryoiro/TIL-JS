@@ -9,7 +9,8 @@ class App extends React.Component {
       input: "",
       todos: [], 
       time: new Date(), 
-      intervalId: ""
+      intervalId: "",
+      speech: new webkitSpeechRecognition()
     }
     this.tick = this.tick.bind(this)
     this.addToDo = this.addToDo.bind(this)
