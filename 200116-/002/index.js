@@ -2,7 +2,7 @@ const	CHRWIDTH	= 8				// キャラはば
 const	CHRHEIGHT	= 9				// キャラ高さ
 const	FONT 		= "20px Arial"	// フォント
 const	HEIGHT 		= 120			// 仮想画面縦
-const	WIDTH 		= 120			// 仮想画面横
+const	WIDTH 		= 128			// 仮想画面横
 const	MAP_WIDTH	= 32			// マップ幅
 const	MAP_HEIGHT	= 32			// マップ高さ
 const	SMOOTH		= 0				// 補完処理
@@ -89,20 +89,24 @@ function gGraphic(){
 		for(let x = 0; x < 20; x++){
 			let	px = gPlayerX + x
 			let py = gPlayerY + y
-			drawTile(g, x * TILESIZE, y * TILESIZE, gMap[ py * MAP_WIDTH + px])
+			drawTile(g, x * TILESIZE - TILESIZE / 2, y * TILESIZE, gMap[ py * MAP_WIDTH + px])
 		}
 	}
 
+	g.fillStyle = "#ff2200"
+	g.fillRect(0, HEIGHT / 2 - 1, WIDTH, 2)
+	g.fillRect( WIDTH / 2 - 1 ,0 ,2 ,HEIGHT)
+
 	g.drawImage(gImgPl, 
-				CHRWIDTH, 0, CHRWIDTH, CHRHEIGHT, 
-				WIDTH / 2, HEIGHT / 2, CHRWIDTH, CHRHEIGHT)
+				CHRWIDTH, 0, CHRWIDTH , CHRHEIGHT, 
+				WIDTH / 2 - CHRWIDTH / 2, HEIGHT / 2 - CHRHEIGHT + TILESIZE / 2, CHRWIDTH, CHRHEIGHT)
 
 	gFrame++
 	if(gFrame >= 100)gFrame = 0
 
-	// g.font = FONT
-	// g.fillStyle = 'black'
-	// g.fillText(gFrame, 5, 30)
+	g.font = FONT
+	g.fillStyle = 'black'
+	g.fillText(gFrame, 5, 30)
 }
 
 function drawTile(g, x, y, index) {
@@ -137,4 +141,26 @@ function wTimer(){
 
 	// フレームレートを設定
 	setInterval(() => {wTimer()}, 33)
+
+	// keyboardイベント
+	window.addEventListener('keydown', e => {
+		e.preventDefault()
+		switch(e.keyCode){
+			case 37:
+				gPlayerX -= 1
+				break;
+			case 38:
+				gPlayerY -= 1
+				break;
+			case 39:
+				gPlayerX += 1
+				break;
+			case 40:
+				gPlayerY += 1
+				break;
+			default:
+				break;
+		}
+	})
+
 })()
