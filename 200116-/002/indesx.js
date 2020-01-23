@@ -1,20 +1,22 @@
 const	CHRWIDTH	= 8				// キャラはば
 const	CHRHEIGHT	= 9				// キャラ高さ
-const	FONT 		= "20px Arial"	// フォント
+const	FONT 		= "12px Arial"	// フォント
+const	FONTSTYLE	= "#fff"
 const	HEIGHT 		= 120			// 仮想画面縦
 const	WIDTH 		= 128			// 仮想画面横
 const	MAP_WIDTH	= 32			// マップ幅
 const	MAP_HEIGHT	= 32			// マップ高さ
 const	SMOOTH		= 0				// 補完処理
 const	TILESIZE	= 8				// タイルサイズ	
-const	TILECOLUMN	= 4
-const	TILEROW		= 4
+const	TILECOLUMN	= 4				// 一タイルごとの高さ
+const	TILEROW		= 4				// 一タイルごとの横幅
+const	WINDOWSTYLE = "rgba( 0, 0, 0, 0.75)"	// デバッグウィンドウの色
 
 let 	gFrame = 0				// 内部カウンタ
 let		gImgMap					// マップ画像
 let		gImgPl				// キャラ画像
-let		gPlayerX = 10
-let		gPlayerY = 20
+let		gPlayerX = 10			// 初期座標	
+let		gPlayerY = 10			// 初期座標
 let		gScreen					// 仮想画面
 let 	gWidth					// 実画面横
 let 	gHeight					// 実画面縦
@@ -84,19 +86,30 @@ function gGraphic(){
 
 	const g =  gScreen.getContext('2d')
 
+	let mx = Math.floor(gPlayerX / TILESIZE)
+	let my = Math.floor(gPlayerY / TILESIZE)
+
 	// Mapの展開
-	for(let y = 0; y < 20; y++){
-		for(let x = 0; x < 20; x++){
-			let	px = gPlayerX + x
-			let py = gPlayerY + y
-			drawTile(g, x * TILESIZE - TILESIZE / 2, y * TILESIZE, gMap[ py * MAP_WIDTH + px])
+	for(let dy = -7; dy < 7; dy++){
+		let ty = my + dy
+		let py = (my + dy + MAP_HEIGHT)% MAP_HEIGHT
+		for(let dx = -8; dx <= 8; dx++){
+			let tx = mx + dx
+			let	px = (mx + dx + MAP_WIDTH) % MAP_WIDTH
+			drawTile(g, 
+				tx * TILESIZE + WIDTH / 2 - gPlayerX,
+				ty * TILESIZE + HEIGHT / 2 - gPlayerY,
+				gMap[ py * MAP_WIDTH + px])
 		}
 	}
+	
 
 	g.fillStyle = "#ff2200"
 	g.fillRect(0, HEIGHT / 2 - 1, WIDTH, 2)
 	g.fillRect( WIDTH / 2 - 1 ,0 ,2 ,HEIGHT)
 
+	// プレイヤー
+	// 位置を / 2 - キャラ横幅 / 2で座標中央に画像を表示
 	g.drawImage(gImgPl, 
 				CHRWIDTH, 0, CHRWIDTH , CHRHEIGHT, 
 				WIDTH / 2 - CHRWIDTH / 2, HEIGHT / 2 - CHRHEIGHT + TILESIZE / 2, CHRWIDTH, CHRHEIGHT)
@@ -104,9 +117,13 @@ function gGraphic(){
 	gFrame++
 	if(gFrame >= 100)gFrame = 0
 
+
+	g.fillStyle = WINDOWSTYLE//ウィンドウの色
+	g.fillRect( 20, 103, 105, 15)
+	
 	g.font = FONT
-	g.fillStyle = 'black'
-	g.fillText(gFrame, 5, 30)
+	g.fillStyle = FONTSTYLE
+	g.fillText(`x= ${gPlayerX} y= ${gPlayerY} m= ${gMap[ my * MAP_WIDTH + mx]}`, 25, 115)
 }
 
 function drawTile(g, x, y, index) {
@@ -161,6 +178,13 @@ function wTimer(){
 			default:
 				break;
 		}
+			// マップループ処理
+		gPlayerX += ( MAP_WIDTH  * TILESIZE ) 
+ 		gPlayerX %= ( MAP_WIDTH  * TILESIZE ) 
+ 		gPlayerY += ( MAP_HEIGHT * TILESIZE )  
+		gPlayerY %= ( MAP_HEIGHT * TILESIZE )  
 	})
+
+
 
 })()
