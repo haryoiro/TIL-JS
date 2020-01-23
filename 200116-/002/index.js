@@ -19,6 +19,7 @@ const	WINDOWSTYLE = "rgba( 0, 0, 0, 0.75)"	// デバッグウィンドウの色
 const gKey = new Uint8Array( 0x100 )				// キー入力バッファ
 let c = 0
 
+let		gAngle = 0
 let 	gFrame = 0				// 内部カウンタ
 let		gImgMap						// マップ画像
 let		gImgPl						// キャラ画像
@@ -116,15 +117,20 @@ function gGraphic(){
 		}
 	}
 	
-	// クロスヘア
-	g.fillStyle = "#ff2200"
-	g.fillRect(0, HEIGHT / 2 - 1, WIDTH, 2)
-	g.fillRect(WIDTH / 2 - 1 ,0 ,2 ,HEIGHT)
+	// // クロスヘア
+	// g.fillStyle = "#ff2200"
+	// g.fillRect(0, HEIGHT / 2 - 1, WIDTH, 2)
+	// g.fillRect(WIDTH / 2 - 1 ,0 ,2 ,HEIGHT)
+
+	gFrame += 1
 
 	// プレイヤー
 	// 位置を / 2 - キャラ横幅 / 2で座標中央に画像を表示
+	// (image: CanvasImageSource, 
+	//	sx: number, sy: number, sw: number, sh: number, 
+	//	dx: number, dy: number, dw: number, dh: number): void
 	g.drawImage(gImgPl, 
-				CHRWIDTH, 0, CHRWIDTH , CHRHEIGHT, 
+				(gFrame >> 3 & 1 ) * CHRWIDTH, gAngle * CHRHEIGHT, CHRWIDTH , CHRHEIGHT, 
 				WIDTH / 2 - CHRWIDTH / 2, HEIGHT / 2 - CHRHEIGHT + TILESIZE / 2, CHRWIDTH, CHRHEIGHT)
 	
 	// フィールド進行処理
@@ -156,8 +162,6 @@ function wTimer(){
 	const ca = document.getElementById('canvas')
 	const g =  ca.getContext('2d')
 
-
-
 	// 仮想画面のイメージを実画面に転送
 	g.drawImage(gScreen, 0, 0, gScreen.width, gScreen.height, 0, 0, gWidth, gHeight)
 }
@@ -170,32 +174,45 @@ function tickField(){
 			break;
 		// WASD
 		case gKey[65]:							// 左
-			gMoveX =- TILESIZE
+			{gMoveX =- TILESIZE, gAngle = 1}
 			break;
 		case gKey[87]:							// 下
-			gMoveY =-TILESIZE
+			{gMoveY =- TILESIZE, gAngle = 3}
 			break;
 		case gKey[68]:							// 右
-			gMoveX =TILESIZE
+			{gMoveX = TILESIZE, gAngle = 2}
 			break;
-		case gKey[83]:							// 上
-			gMoveY =TILESIZE
+		case gKey[83]:							// 下
+			{gMoveY = TILESIZE, gAngle = 0}
 			break;
 		// やじるし
 		case gKey[37]:							// 左
-			gMoveX =-TILESIZE
+			{gMoveX = -TILESIZE, gAngle = 1}
 			break;
-		case gKey[38]:							// 下
-			gMoveY =-TILESIZE
+		case gKey[38]:							// 上
+			{gMoveY = -TILESIZE, gAngle = 3}
 			break;
 		case gKey[39]:							// 右
-			gMoveX =TILESIZE
+			{gMoveX = TILESIZE, gAngle = 2}
 			break;
-		case gKey[40]:							// 上
-			gMoveY =TILESIZE
+		case gKey[40]:							// 下
+			{gMoveY = TILESIZE, gAngle = 0}
 			break;
 		default:
 			break;
+	}
+
+	let mx = Math.floor((gPlayerX + gMoveX) / TILESIZE)	// 移動後のタイル番号
+	let my = Math.floor((gPlayerY + gMoveY) / TILESIZE) // 移動後のタイル番号
+	mx += MAP_WIDTH
+	mx %= MAP_WIDTH
+	my += MAP_HEIGHT
+	my %= MAP_HEIGHT
+	let m = gMap[ my * MAP_WIDTH + mx ]	// タイル番号
+
+	if(m < 3) {												// 進入不可の地形の場合
+		gMoveX = 0
+		gMoveY = 0
 	}
 
 	gPlayerX += Math.sign(gMoveX)	// プレイヤー座標移動X
