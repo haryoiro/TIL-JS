@@ -4,17 +4,17 @@ const	FONT 		= "20px Arial"	// フォント
 const	HEIGHT 		= 120			// 仮想画面縦
 const	WIDTH 		= 128			// 仮想画面横
 const	MAP_WIDTH	= 32			// マップ幅
-const	MAP_HEIGHT	= 32			// マップ高さ
+const	MAP_HEIGHT	= 32		// マップ高さ
 const	SMOOTH		= 0				// 補完処理
 const	TILESIZE	= 8				// タイルサイズ	
 const	TILECOLUMN	= 4
 const	TILEROW		= 4
 
-let 	gFrame = 0				// 内部カウンタ
-let		gImgMap					// マップ画像
-let		gImgPl				// キャラ画像
-let		gPlayerX = 10
-let		gPlayerY = 20
+let 	gFrame = 0					// 内部カウンタ
+let		gImgMap							// マップ画像
+let		gImgPl							// キャラ画像
+let		gPlayerX = 10				// プレイヤー初期座標X	
+let		gPlayerY = 20				// プレイヤー初期座標Y
 let		gScreen					// 仮想画面
 let 	gWidth					// 実画面横
 let 	gHeight					// 実画面縦
@@ -56,10 +56,13 @@ const	gMap = [
 
 
 function wSize(){
+	// メインキャンバスの取得
 	const ca = document.getElementById('canvas')
+	// メインキャンバスの上下幅をウィンドウサイズに合わせる
 	ca.width = innerWidth
 	ca.height = innerHeight
 
+	// ドットにスムーズをかけるかかけないかを設定
 	const g = ca.getContext('2d')
 	g.imageSmoothingEnabled = g.msImageSmoothingEnabled = SMOOTH	// 補完処理
 
