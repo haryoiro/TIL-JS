@@ -8,7 +8,7 @@ const gC = {
   SCROLL:     4,
   SMOOTH:     0,
   TILESIZE:   4,
-  FRAMETIME:  66
+  FRAMETIME:  33
 }
 
 const gL = {  
@@ -24,8 +24,11 @@ const gL = {
   color: 'black',
   paratteRect: [],
   dragging: false,
-  touch: false
-
+  touch: false,
+  redoStack: [],
+  redoStacker: [],
+  redoMap: new Map(),
+  pType: undefined
 }
 
 function mWindow() {
@@ -33,9 +36,9 @@ function mWindow() {
   c.width = innerWidth
   c.height = innerHeight
 
-  // // ドットにスムーズをかけるかかけないかを設定
-	// const g = c.getContext('2d')
-	// g.imageSmoothingEnabled = g.msImageSmoothingEnabled = gC.SMOOTH	// 補完処理
+  // ドットにスムーズをかけるかかけないかを設定
+	const g = c.getContext('2d')
+	isImageSmoothingEnabled(g, false)
 
 
   // 実画面サイズを計測
@@ -50,25 +53,30 @@ function mWindow() {
 
 }
 
+
+
 function gPaint(){
   const g = gL.gScreen.getContext('2d')
   g.fillStyle = '#fff'
   g.fillRect(0, 0, g.width, g.height)
 
-  g.fillStyle = '#2200ee'/*"#" + Math.floor(Math.random() * 0xFFFFFF).toString(16);*/
+  g.fillStyle = '#eee'/*"#" + Math.floor(Math.random() * 0xFFFFFF).toString(16);*/
   g.fillRect(gL.px, gL.py, 10, 10)
 
 
 
-  // クロスヘア
-	g.fillStyle = "#eee"
-	g.fillRect(0, gC.HEIGHT / 2 - 1, gC.WIDTH, 1)
-  g.fillRect(gC.WIDTH / 2 - 1 ,0 ,1 ,gC.HEIGHT)
+  // // クロスヘア
+	g.fillStyle = "#99ee00"
+	// g.fillRect(0, gC.HEIGHT / 2 - 1, gC.WIDTH, 1)
+  // g.fillRect(gC.WIDTH / 2 - 1 ,0 ,1 ,gC.HEIGHT)
+
+  // ボーダーライン
+  g.fillRect(0, 0, gC.WIDTH, 4 )
+  g.fillRect(0, 0, 4, gC.HEIGHT)
+  g.fillRect(0, 508, gC.WIDTH, 4)
+  g.fillRect(1020, 0, 4, gC.HEIGHT)
 }
 
-function fC(num){
-  Math.floor(num)
-}
 function wTimer(){
 
   gPaint()
@@ -81,17 +89,20 @@ function wTimer(){
 
   g.drawImage(gL.gScreen, 0, 0, gL.gScreen.width, gL.gScreen.height, 0, 0, gL.gWidth, gL.gHeight)
 
+  // 実画面の色設定
   g.fillStyle = gL.color
 
+  // 実画面のフォント設定
   g.font = gC.FONT
   g.fontStyle = gC.FONTSTYLE
 
-  // カーソル
-  // g.fillRect(gL.mx - 10, gL.my - 5, 10, 10)
+  // マウスカーソル
+  // カーソル座標
   g.fillText(`x: ${gL.mx} y: ${gL.my}`, gL.mx + 5, gL.my + 2)
 
+  // カーソルアイコン
   g.beginPath()
-  g.arc(gL.mx, gL.my, gL.gRadius, 0,  Math.PI * 2)
+  g.arc(gL.mx + 5, gL.my + 5, gL.gRadius, 0,  Math.PI * 2)
   g.fill()
 }
 
@@ -102,20 +113,26 @@ function put(){
   g.beginPath()
   gL.dragging = true
 }
+
 function over(){
   gL.dragging = false
+  
+  // gL.redoMap.forEach((key, value) => {
+  //   console.log(value)
+  // })
 }
-function tPut(e){
-  e.preventDefault()
-  touch = true
+
+function thisPoint(e){
+  gL.rect = e.target.getBoundingClientRect();
+  gL.mx = (e.clientX - Math.floor(gL.rect.left))
+  gL.my = (e.clientY - Math.floor(gL.rect.top))
 }
+
 function paint(e){
   const g = gL.gScreen.getContext('2d')
 
   e.preventDefault()
-  gL.rect = e.target.getBoundingClientRect();
-  gL.mx = (e.clientX - Math.floor(gL.rect.left))
-  gL.my = (e.clientY - Math.floor(gL.rect.top))
+  thisPoint(e)
   if(gL.dragging){
     let x = (e.clientX / (gL.gWidth / gC.WIDTH))
     let y = (e.clientY / (gL.gHeight / gC.HEIGHT))
@@ -127,12 +144,58 @@ function paint(e){
     g.fill()
     g.beginPath()
     g.moveTo(x, y)
+    
+    // TODO: 配列を間引く
+    gL.redoMap.set([gL.mx, gL.my])
   }
 }
+function handledown(e){
+  const g = gL.gScreen.getContext('2d')
+  g.beginPath()
+  gL.dragging = true
+  gL.pType = e.pointerType
+}
+function handleup(){
+  gL.dragging = false
+}
 
+function handlemove(e){
+  switch (gL.pType){
+    case 'mouse':
+      gL.pType = 'mouse'
+      paint(e)
+      break
+    case 'touch':
+      gL.pType = 'touch'
+      break
+    case 'pen':
+      gL.pType = 'pen'
+      break
+  }
+}
+  
+
+// ----- 外観設定系関数 -----
+function isImageSmoothingEnabled(context, bool){
+  if(!bool){bool = true}
+  context.mozImageSmoothingEnabled = bool;
+  context.webkitImageSmoothingEnabled = bool;
+  context.msImageSmoothingEnabled = bool
+  context.imageSmoothingEnabled = bool
+}
 
 function glog(c){
   console.log(c)
+}
+
+function hideMenu(){
+  document.body.style.overflow = 'hidden'
+  document.addEventListener('contextmenu', e => {
+    e.preventDefault()
+  })
+  document.addEventListener('MSHoldVisal', e => {
+    e.preventDefault()
+  })
 }
 
 (() => {
@@ -143,8 +206,8 @@ function glog(c){
   gL.gScreen.height = gC.HEIGHT
 
   mWindow()
+  hideMenu()
   window.addEventListener('resize', mWindow)
-  
   window.addEventListener('keydown', e => {
     e.preventDefault()
       switch(e.keyCode){
@@ -180,18 +243,20 @@ function glog(c){
           break;
     }
     
-    if      (gL.px >= 512)  gL.px = 0
-    else if (gL.px <= 0  )  gL.px = 512
-    else if (gL.py >= 256)  gL.py = 0
-    else if (gL.py <= 0  )  gL.py = 256
+    if      (gL.px >= 1024)  gL.px = 0
+    else if (gL.px <= 0  )  gL.px = 1024
+    else if (gL.py >= 512)  gL.py = 0
+    else if (gL.py <= 0  )  gL.py = 512
   })
-  
-  // if (window.PointerEvent) {
 
-  // } else {
+  if (window.PointerEvent) {
+    document.addEventListener('pointerdown', handledown)
+    document.addEventListener('pointerup', handleup)
+    document.addEventListener('pointermove', handlemove)
+  } else {
     document.addEventListener('mousedown', put) 
     document.addEventListener('mousemove', paint)
     document.addEventListener('mouseup', over)
-  // }
+  }
   setInterval(()=>{wTimer()}, gL.FRAMETIME)
 })()
