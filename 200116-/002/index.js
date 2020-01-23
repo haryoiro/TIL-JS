@@ -22,8 +22,10 @@ let c = 0
 let 	gFrame = 0				// 内部カウンタ
 let		gImgMap						// マップ画像
 let		gImgPl						// キャラ画像
-let		gPlayerX = START_X * TILESIZE + TILESIZE / 2			// 初期座標	
-let		gPlayerY = START_Y * TILESIZE	+ TILESIZE / 2			// 初期座標
+let		gMoveX		= 0			// 移動判定
+let		gMoveY		= 0			// 移動判定 
+let		gPlayerX 	= START_X * TILESIZE + TILESIZE / 2			// 初期座標	
+let		gPlayerY 	= START_Y * TILESIZE	+ TILESIZE / 2			// 初期座標
 let		gScreen						// 仮想画面
 let 	gWidth						// 実画面横
 let 	gHeight						// 実画面縦
@@ -136,7 +138,7 @@ function gGraphic(){
 	
 	g.font = FONT
 	g.fillStyle = FONTSTYLE
-	g.fillText(`x= ${gPlayerX} y= ${gPlayerY} m= ${gMap[ my * MAP_WIDTH + mx]}`, 25, 114)
+	g.fillText(`x:${gPlayerX} y:${gPlayerY} m:${gMap[ my * MAP_WIDTH + mx]}`, 25, 114)
 	g.fillText(`KEY ${c}:${gKey[c]}`,25, 97)
 
 }
@@ -162,39 +164,45 @@ function wTimer(){
 
 // フィールド進行処理
 function tickField(){
+	if(gMoveX != 0 || gMoveY != 0){c = 0}
 	switch(gKey[c]){
 		case gKey[0]:
-			gPlayerX += 0
 			break;
 		// WASD
-		case gKey[65]:	// 左
-			gPlayerX -= 1
+		case gKey[65]:							// 左
+			gMoveX =- TILESIZE
 			break;
-		case gKey[87]:	// 下
-			gPlayerY -= 1
+		case gKey[87]:							// 下
+			gMoveY =-TILESIZE
 			break;
-		case gKey[68]:	// 右
-			gPlayerX += 1
+		case gKey[68]:							// 右
+			gMoveX =TILESIZE
 			break;
-		case gKey[83]:	// 上
-			gPlayerY += 1
+		case gKey[83]:							// 上
+			gMoveY =TILESIZE
 			break;
 		// やじるし
-		case gKey[37]:	// 左
-			gPlayerX -= 1
+		case gKey[37]:							// 左
+			gMoveX =-TILESIZE
 			break;
-		case gKey[38]:	// 下
-			gPlayerY -= 1
+		case gKey[38]:							// 下
+			gMoveY =-TILESIZE
 			break;
-		case gKey[39]:	// 右
-			gPlayerX += 1
+		case gKey[39]:							// 右
+			gMoveX =TILESIZE
 			break;
-		case gKey[40]:	// 上
-			gPlayerY += 1
+		case gKey[40]:							// 上
+			gMoveY =TILESIZE
 			break;
 		default:
 			break;
 	}
+
+	gPlayerX += Math.sign(gMoveX)	// プレイヤー座標移動X
+	gPlayerY += Math.sign(gMoveY)	// プレイヤー座標移動Y
+	gMoveX -= Math.sign(gMoveX)		// 移動量消費X
+	gMoveY -= Math.sign(gMoveY)		// 移動量消費Y
+
 
 	// マップループ処理
 	gPlayerX += ( MAP_WIDTH  * TILESIZE ) 
