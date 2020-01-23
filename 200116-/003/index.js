@@ -1,11 +1,9 @@
 const gC = {
   HEIGHT:     512,
-  WIDTH:      1024,
+  WIDTH:      1000,
   FONT:       "10px monospace",	// フォント
   FONTSTYLE:  "#000",
-  MAP_WIDTH:  512,
-  MAP_HEIGHT: 1024,
-  SCROLL:     4,
+  SCROLL:     16,
   SMOOTH:     0,
   TILESIZE:   4,
   FRAMETIME:  33
@@ -60,25 +58,22 @@ function gPaint(){
   g.fillStyle = '#fff'
   g.fillRect(0, 0, g.width, g.height)
 
-  g.fillStyle = '#eee'/*"#" + Math.floor(Math.random() * 0xFFFFFF).toString(16);*/
-  g.fillRect(gL.px, gL.py, 10, 10)
-
-
-
   // // クロスヘア
-	g.fillStyle = "#99ee00"
+	// g.fillStyle = "#99ee00"
 	// g.fillRect(0, gC.HEIGHT / 2 - 1, gC.WIDTH, 1)
   // g.fillRect(gC.WIDTH / 2 - 1 ,0 ,1 ,gC.HEIGHT)
 
   // ボーダーライン
-  g.fillRect(0, 0, gC.WIDTH, 4 )
-  g.fillRect(0, 0, 4, gC.HEIGHT)
-  g.fillRect(0, 508, gC.WIDTH, 4)
-  g.fillRect(1020, 0, 4, gC.HEIGHT)
+	g.fillStyle = "#3334"
+  g.fillRect(0, 0, gC.WIDTH - 4, 4 )
+  g.fillRect(0, 0, 4, gC.HEIGHT -4)
+  g.fillRect(0, 504, gC.WIDTH - 4, 4)
+  g.fillRect(996, 0, 4, gC.HEIGHT - 4)
 }
 
+// メインキャンバス描画
 function wTimer(){
-
+  
   gPaint()
 
   const c = document.getElementById('canvas')
@@ -88,6 +83,10 @@ function wTimer(){
   g.fillRect(0, 0, c.width, c.height)
 
   g.drawImage(gL.gScreen, 0, 0, gL.gScreen.width, gL.gScreen.height, 0, 0, gL.gWidth, gL.gHeight)
+
+    //  左上のポチ
+  g.fillStyle = '#333'/*"#" + Math.floor(Math.random() * 0xFFFFFF).toString(16);*/
+  g.fillRect(gL.px, gL.py, 10, 10)
 
   // 実画面の色設定
   g.fillStyle = gL.color
@@ -243,10 +242,10 @@ function hideMenu(){
           break;
     }
     
-    if      (gL.px >= 1024)  gL.px = 0
-    else if (gL.px <= 0  )  gL.px = 1024
-    else if (gL.py >= 512)  gL.py = 0
-    else if (gL.py <= 0  )  gL.py = 512
+    if      (gL.px >= 1024 * 2)  gL.px = 0
+    else if (gL.px <= 0  )  gL.px = 1024 * 2
+    else if (gL.py >= 512 * 2)  gL.py = 0
+    else if (gL.py <= 0  )  gL.py = 512 * 2
   })
 
   if (window.PointerEvent) {
