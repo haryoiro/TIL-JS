@@ -236,7 +236,7 @@ function tickField(){
 
 	gPlayerX += Math.sign(gMoveX)	 	* SCROLL	// プレイヤー座標移動X
 	gPlayerY += Math.sign(gMoveY)	 	* SCROLL// プレイヤー座標移動Y
-	gMoveX -= Math.sign(gMoveX)			* SCROLL// 移動量消費X
+	gMoverX -= Math.sign(gMoveX)			* SCROLL// 移動量消費X
 	gMoveY -= Math.sign(gMoveY)			*	SCROLL// 移動量消費Y
 
 
