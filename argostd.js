@@ -12,6 +12,16 @@ const isPrime = num => {
 	return true
 }
 
+// 与えられた数から素数のみを抽出
+const listPrimes = (limit) => {
+	let listArr = []
+	for(let i = 2; i < limit;i+=1){
+		if(isPrime(i)) listArr.push(i)
+	}
+	return listArr
+}
+
+
 // ユークリッド互除法
 const gcd = (a, b) => {
 	let r = a % b
