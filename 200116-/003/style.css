@@ -1,25 +1,23 @@
-:root {
-  position: absolute;
-}
 .container{
-  position: absolute;
+  position: fixed;
 }
 #color {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 31;
+  z-index: 2;
 }
 .color {
+  position: fixed;
   background-color: black;
-  width: 5em;
-  height: 5em;
+  width: 4rem;
+  height: 4rem;
   top: 20px;
   left: 10px;
   margin: 10px;
 }
 .canvas {
-  z-index: 20;
+  z-index: 1;
   cursor: none;
-  position: absolute;
+  position: fixed;
 }
